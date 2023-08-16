@@ -1,0 +1,5 @@
+{
+  "name": "mfe-example-nextjs-routing",
+  "private": true,
+  "workspaces": ["packages/*"]
+}
