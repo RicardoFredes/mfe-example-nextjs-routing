@@ -7,8 +7,8 @@ const federationConfig = {
   shared: {},
   exposes: {
     "App": "src/remote-app.tsx",
+    // "RoutesManifest": ".next/routes-manifest.json",
   },
-  // extraOptions: { exposePages: true }
 };
 
 module.exports = {
@@ -16,6 +16,7 @@ module.exports = {
   output: "export",
   reactStrictMode: true,
   images: { unoptimized: true },
+  buildId: "remote",
 
   webpack(config, options) {
     Object.assign(config.experiments, { topLevelAwait: true });

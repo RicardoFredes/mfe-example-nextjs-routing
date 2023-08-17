@@ -13,10 +13,11 @@ const nextConfig = {
   output: "export",
   reactStrictMode: true,
   images: { unoptimized: true },
+  buildId: "host",
   webpack(config, options) {
     if (!options.isServer) {
       config.plugins.push(new NextFederationPlugin(federationConfig));
-    };
+    }
     return config;
   },
 };

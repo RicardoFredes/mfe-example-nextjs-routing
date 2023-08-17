@@ -1,34 +1,52 @@
 import React from "react";
-import { Router } from "next/router";
+import { Router, withRouter } from "next/router";
 import { ErrorBoundary } from "react-error-boundary";
 import { AppProviders } from "./components/AppProviders";
 
-export default function RemoteApp() {
+interface RemoteAppProps {
+  onUnmount?: Function;
+  onMount?: Function;
+}
+
+const { staticRoutes, dynamicRoutes } = require("../.next/routes-manifest.json");
+
+function RemoteApp(props: RemoteAppProps) {
+  React.useEffect(() => {
+    props.onMount?.({
+      routesManifest: { staticRoutes, dynamicRoutes },
+    });
+
+    return () => props.onUnmount?.();
+  }, []);
   return (
     <AppProviders>
-      <Pages />
+      <ErrorBoundary fallback={<>Error...</>}>
+        <Pages />
+      </ErrorBoundary>
     </AppProviders>
   );
 }
 
+export default withRouter(RemoteApp);
+
 const Pages = () => {
   const [page, setPage] = React.useState<string>();
-  const interceptRouter = (target: string) => setPage(getFilePath(target));
+
+  const interceptRouter = (target?: string) => {
+    const pathname = target || location.pathname;
+    setPage(getFilePath(pathname));
+  };
 
   React.useEffect(() => {
-    const target = `${location.pathname}${location.search}`;
-    interceptRouter(target);
+    interceptRouter();
 
     Router.events.on("beforeHistoryChange", interceptRouter);
     return () => Router.events.off("beforeHistoryChange", interceptRouter);
   }, []);
 
   if (typeof page !== "string") return <>404</>;
-  return (
-    <ErrorBoundary fallback={<>Error...</>}>
-      <Page page={page} />
-    </ErrorBoundary>
-  );
+
+  return <Page page={page} />;
 };
 
 const Page = ({ page }: { page: string }) => {
@@ -42,7 +60,6 @@ const Page = ({ page }: { page: string }) => {
 
 const getFilePath = (pathname: string) => {
   try {
-    const { staticRoutes, dynamicRoutes } = require("../.next/routes-manifest.json");
     const allRoutes = [].concat(staticRoutes, dynamicRoutes);
     for (const { regex, page } of allRoutes) {
       const match = new RegExp(regex);

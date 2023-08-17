@@ -1,5 +1,9 @@
 {
   "name": "mfe-example-nextjs-routing",
   "private": true,
-  "workspaces": ["packages/*"]
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "remote": "yarn workspace remote build && yarn workspace remote serve",
+    "host": "yarn workspace host dev"
+  }
 }
