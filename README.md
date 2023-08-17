@@ -55,4 +55,6 @@ yarn run host
 # http://localhost:3001
 ```
 
-Se tudo deu certo, a aplicação estará rodando na porta 3001
+Se tudo deu certo, a aplicação estará rodando na porta `3001`
+
+<img width="565" alt="image" src="https://github.com/RicardoFredes/mfe-example-nextjs-routing/assets/29892001/58bc781b-fca9-4f46-be5a-c14b7e286d75">
