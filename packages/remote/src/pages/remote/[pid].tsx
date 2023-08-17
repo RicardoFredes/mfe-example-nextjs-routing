@@ -1,10 +1,11 @@
-import { Router, useRouter } from "next/router";
+import { useWatchParam } from "@/hooks/useWatchParam";
+import { useRouter } from "next/router";
 import React from "react";
 
 export default function IdPage() {
   const router = useRouter();
 
-  const id = useWatchParam((pathname: string) => pathname.split("/").pop());
+  const id = useWatchParam("/remote/[id]");
 
   const goToRandom = () => {
     const randomId = (Math.random() * 100).toFixed();
@@ -19,24 +20,3 @@ export default function IdPage() {
     </main>
   );
 }
-
-const useWatchParam = (parser: (pathname: string) => string | undefined) => {
-  const router = useRouter();
-
-  const [value, setValue] = React.useState<string>();
-
-  const interceptRouter = (target?: string) => {
-    const pathname = target ? target.replace(/\?.*/, "") : location.pathname;
-    const newValue = parser(pathname);
-    setValue(newValue);
-  };
-
-  React.useEffect(() => {
-    interceptRouter();
-
-    Router.events.on("beforeHistoryChange", interceptRouter);
-    return () => Router.events.off("beforeHistoryChange", interceptRouter);
-  }, [router.asPath]);
-
-  return React.useMemo(() => value, [value]);
-};
