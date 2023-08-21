@@ -1,6 +1,5 @@
 import React from "react";
 import { Router, withRouter } from "next/router";
-import { ErrorBoundary } from "react-error-boundary";
 import { AppProviders } from "./components/AppProviders";
 
 interface RemoteAppProps {
@@ -20,9 +19,7 @@ function RemoteApp(props: RemoteAppProps) {
   }, []);
   return (
     <AppProviders>
-      <ErrorBoundary fallback={<>Error...</>}>
-        <Pages />
-      </ErrorBoundary>
+      <Pages />
     </AppProviders>
   );
 }
@@ -32,16 +29,16 @@ export default withRouter(RemoteApp);
 const Pages = () => {
   const [page, setPage] = React.useState<string>();
 
-  const interceptRouter = (target?: string) => {
+  const interceptRoute = (target?: string) => {
     const pathname = target || location.pathname;
     setPage(getFilePath(pathname));
   };
 
   React.useEffect(() => {
-    interceptRouter();
+    interceptRoute();
 
-    Router.events.on("beforeHistoryChange", interceptRouter);
-    return () => Router.events.off("beforeHistoryChange", interceptRouter);
+    Router.events.on("beforeHistoryChange", interceptRoute);
+    return () => Router.events.off("beforeHistoryChange", interceptRoute);
   }, []);
 
   if (typeof page !== "string") return <>404</>;

@@ -6,7 +6,7 @@ type Parser = (pathname: string) => string | undefined;
 export const useWatchParam = (pattern: string | Parser) => {
   const [value, setValue] = React.useState<string>();
 
-  const interceptRouter = (target?: string) => {
+  const interceptRoute = (target?: string) => {
     const pathname = target ? target.replace(/\?.*/, "") : location.pathname;
     const toParser = typeof pattern === "function" ? pattern : defaultParser(pattern);
     const newValue = toParser(pathname);
@@ -14,10 +14,10 @@ export const useWatchParam = (pattern: string | Parser) => {
   };
 
   React.useEffect(() => {
-    interceptRouter();
+    interceptRoute();
 
-    Router.events.on("beforeHistoryChange", interceptRouter);
-    return () => Router.events.off("beforeHistoryChange", interceptRouter);
+    Router.events.on("beforeHistoryChange", interceptRoute);
+    return () => Router.events.off("beforeHistoryChange", interceptRoute);
   }, []);
 
   return React.useMemo(() => value, [value]);

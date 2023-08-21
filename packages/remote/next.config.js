@@ -7,7 +7,6 @@ const federationConfig = {
   shared: {},
   exposes: {
     "App": "src/remote-app.tsx",
-    // "RoutesManifest": ".next/routes-manifest.json",
   },
 };
 
