@@ -12,7 +12,7 @@ export const CommunicatorProvider = ({ children }: { children: React.ReactNode }
     communicator.publish("request:callback", () => console.log("request-callback"));
 
     return () => {
-      communicator.unsubscribe("login", login);
+      communicator.unsubscribe("response:login", login);
     };
   }, []);
 
